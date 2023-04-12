@@ -1,0 +1,5 @@
+{ 
+	"client_id": "296002523812-8anghr20cmtj8m0ks5dkf0eb43ttr2r9.apps.googleusercontent.com", 
+	"client_secret": "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", 
+	"redirect_url": "http://localhost:8000/google-auth" 
+}

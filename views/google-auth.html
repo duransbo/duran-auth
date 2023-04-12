@@ -1,0 +1,11 @@
+<body>
+	<script>
+		const json = {
+			id : "<%= profile_info['id'] %>",
+			name : "<%= profile_info['name'] %>",
+			mail : "<%= profile_info['mail'] %>"
+		};
+
+		window.opener.postMessage(json, "http://localhost:7000");
+	</script>
+</body>
