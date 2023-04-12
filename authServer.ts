@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.90.0/http/server.ts";
-import { renderFileToString } from "https://deno.land/x/dejs@0.9.3/mod.ts";
+import { renderFileToString } from "https://deno.land/x/dejs@0.10.3/mod.ts";
 import { getAccessToken, getProfileInfo } from "./googleLogin.ts";
 
 const settings = JSON.parse(await Deno.readTextFile("./settings.json"));
@@ -15,7 +15,7 @@ console.info("auth server listening on port 8000");
 const server = serve({ port: 8000 });
 
 for await (const request of server) {
-    let request_url = new URL(request.url, "http://duran-auth.deno.dev");
+    let request_url = new URL(request.url, "https://duran-auth.deno.dev:8000");
    
     switch(request_url.pathname) {
     	case "/":
