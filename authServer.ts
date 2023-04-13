@@ -19,7 +19,7 @@ async function render(filePath: string, contextType: string) {
 }
 
 async function router(request: Request): Promise<Response> {
-	const url = new URL(request.url, "http://duran-auth.deno.dev:8000");
+	const url = new URL(request.url, "http://duran-auth.deno.dev");
 
 	switch(url.pathname) {
 		case "/":
