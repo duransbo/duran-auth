@@ -3,11 +3,16 @@ import { serve } from "https://deno.land/std@0.181.0/http/server.ts";
 import { getAccessToken, getProfileInfo } from "./googleLogin.ts";
 
 const env = await load();
+const clientId = env["CLIENT_ID"] || Deno.env.get("CLIENT_ID");
+const clientSecret = env["CLIENT_SECRET"] || Deno.env.get("CLIENT_SECRET");
+const redirectURL = env["REDIRECT_URL"] || Deno.env.get("REDIRECT_URL");
+
+
 const google_oauth_url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
 google_oauth_url.searchParams.set("scope", "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email");
-google_oauth_url.searchParams.set("redirect_uri", env["REDIRECT_URL"]);
+google_oauth_url.searchParams.set("redirect_uri", redirectURL || "");
 google_oauth_url.searchParams.set("response_type", "code");
-google_oauth_url.searchParams.set("client_id", env["CLIENT_ID"]);
+google_oauth_url.searchParams.set("client_id", clientId || "");
 google_oauth_url.searchParams.set("access_type", "online");
 
 async function render(filePath: string, contextType: string) {
@@ -28,7 +33,7 @@ async function router(request: Request): Promise<Response> {
 				headers: { "content-type": "text/html" }
 			});
 		case "/google-auth":
-			const access_token = await getAccessToken(env["CLIENT_ID"], env["CLIENT_SECRET"], env["REDIRECT_URL"], url.searchParams.get("code"));
+			const access_token = await getAccessToken(clientId, clientSecret, redirectURL, url.searchParams.get("code"));
 			const profile_info = await getProfileInfo(access_token);
 
 			const json = {
