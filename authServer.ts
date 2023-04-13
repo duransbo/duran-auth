@@ -1,14 +1,18 @@
 import { serve } from "https://deno.land/std@0.90.0/http/server.ts";
+import { load } from "https://deno.land/std/dotenv/mod.ts";
 import { renderFileToString } from "https://deno.land/x/dejs@0.10.3/mod.ts";
-import { getAccessToken, getProfileInfo } from "./googleLogin.ts";
+import { getAccessToken, getProfileInfo } from "./googleLogin.ts"
 
-const settings = JSON.parse(await Deno.readTextFile("./settings.json"));
+const env = await load();
+const clientId = env["CLIENT_ID"];
+const clientSecret = env["CLIENT_SECRET"];
+const redirectUrl = env["REDIRECT_URL"];
 
 let google_oauth_url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
 google_oauth_url.searchParams.set("scope", "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email");
-google_oauth_url.searchParams.set("redirect_uri", settings.redirect_url);
+google_oauth_url.searchParams.set("redirect_uri", redirectUrl);
 google_oauth_url.searchParams.set("response_type", "code");
-google_oauth_url.searchParams.set("client_id", settings.client_id);
+google_oauth_url.searchParams.set("client_id", clientId);
 google_oauth_url.searchParams.set("access_type", "online");
 
 console.info("auth server listening on port 8000");
@@ -26,7 +30,7 @@ for await (const request of server) {
 
     	case "/google-auth":
     		try {
-    			let access_token = await getAccessToken(settings.client_id, settings.client_secret, settings.redirect_url, request_url.searchParams.get("code"));
+    			let access_token = await getAccessToken(clientId, clientSecret, redirectUrl, request_url.searchParams.get("code"));
     			let profile_info = await getProfileInfo(access_token);
     			
     			// send profile info to the template
