@@ -19,12 +19,12 @@ async function render(filePath: string, contextType: string) {
 }
 
 async function router(request: Request): Promise<Response> {
-	const url = new URL(request.url, "http://duran-auth.deno.dev");
+	const url = new URL(request.url, "https://duran-auth.deno.dev");
 
 	switch(url.pathname) {
 		case "/":
 			//return Response.redirect(google_oauth_url.toString(), 307);
-			new Response(`<a href="${google_oauth_url.toString()}" style="display: none">Login with Google</a>`, {
+			return new Response(`<a href="${google_oauth_url.toString()}">Login with Google</a>`, {
 				headers: { "content-type": "text/html" }
 			});
 		case "/google-auth":
